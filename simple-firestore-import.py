@@ -20,10 +20,16 @@ def import_data(service_account_key_path, data_file, collection_name):
         data = get_data(data_file)
         check_data(data)
 
-        doc_ref = db.collection(collection_name)
-        for datum in data:
-            doc_ref.add(datum)
-            print("Added: {}".format(datum))
+        collection_ref = db.collection(collection_name)
+        for data_obj in data:
+            print("toAdd: {}".format(data_obj))
+            # doc_ref.add(datum)
+            account = data_obj['account']
+
+            data_obj.pop('account', None)
+            collection_ref.document(account).set(data_obj)
+
+            print("Added: {}".format(data_obj))
 
     except Exception as error:
         print("\nERROR: {}".format(str(error)))
